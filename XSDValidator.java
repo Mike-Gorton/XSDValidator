@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import javax.xml.validation.Schema;
@@ -31,19 +32,44 @@ public class XSDValidator {
    }
 
    public static boolean validateXMLSchema(String xsdPath, String xmlPath) {
-      try {
-         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-         Schema schema = factory.newSchema(new File(xsdPath));
-         Validator validator = schema.newValidator();
-         validator.validate(new StreamSource(new File(xmlPath)));
-      } catch (IOException e) {
-         System.out.println("Exception: " + e.getMessage());
-         return false;
-      } catch (SAXException e1) {
-         System.out.println("SAX Exception: " + e1.getMessage());
-         return false;
-      }
 
-      return true;
-   }
+   try {
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = schemaFactory.newSchema(new File(xsdFilePath));
+            Validator validator = schema.newValidator();
+
+            Source source = new StreamSource(new File(xmlFilePath));
+
+            ValidationHandler validationHandler = new ValidationHandler();
+            validator.setErrorHandler(validationHandler);
+
+            validator.validate(source);
+
+            if (validationHandler.hasErrors()) {
+                System.out.println("Validation errors:");
+                validationHandler.printErrors();
+            } else {
+                System.out.println("XML is valid against the XSD.");
+            }
+        } catch (SAXException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+
+class ValidationHandler extends org.xml.sax.helpers.DefaultHandler {
+    private StringBuilder errorMessage = new StringBuilder();
+
+    @Override
+    public void error(org.xml.sax.SAXParseException e) throws org.xml.sax.SAXException {
+        errorMessage.append("Error: ").append(e.getMessage()).append("\n");
+    }
+
+    public boolean hasErrors() {
+        return errorMessage.length() > 0;
+    }
+
+    public void printErrors() {
+        System.out.println(errorMessage.toString());
+    }
