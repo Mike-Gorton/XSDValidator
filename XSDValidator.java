@@ -15,11 +15,11 @@ public class XSDValidator {
 
    public static void main(String[] args) {
 
-      String XMLPath = "C:\\Users\\qxp5531\\Desktop\\Test\\B1\\";
-      String XSDPath = "C:\\Users\\qxp5531\\Desktop\\Test\\B1\\Schemas_Billgate\\";
+      String XMLPath = "C:\\Users\\mike\\Desktop\\BMW-Work\\quibiq\\testfiles\\Billgate\\";
+      String XSDPath = "C:\\Users\\mike\\Desktop\\BMW-Work\\quibiq\\testfiles\\Billgate\\Schemas_Billgate\\";
 
-      String xml = XMLPath.concat("ONB_a6e96ab7-e660-4726-a441-a25871011b3b.xml");
-      String xsd = XSDPath.concat("BMWOnboarding.xsd");
+      String xml = XMLPath.concat("SND_ATLAS_35163_8210269016_bc99b36e-8f1d-4b4a-b322-67d115cf24b7.xml");
+      String xsd = XSDPath.concat("BMWBillgate.xsd");
 
       boolean isValid = validateXMLSchema(xsd, xml);
 
@@ -31,7 +31,7 @@ public class XSDValidator {
 
    }
 
-   public static boolean validateXMLSchema(String xsdPath, String xmlPath) {
+   public static boolean validateXMLSchema(String xsdFilePath, String xmlFilePath) {
 
    try {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -54,6 +54,8 @@ public class XSDValidator {
         } catch (SAXException | IOException e) {
             e.printStackTrace();
         }
+
+        return true;
     }
 
 }
@@ -73,3 +75,4 @@ class ValidationHandler extends org.xml.sax.helpers.DefaultHandler {
     public void printErrors() {
         System.out.println(errorMessage.toString());
     }
+}
