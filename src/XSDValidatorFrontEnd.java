@@ -251,8 +251,7 @@ class myScreen extends JFrame implements ActionListener {
             out.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
-            }
-    
+            }   
     
     }
 }
